@@ -33,7 +33,7 @@ def connect(sid, environ):
 
 @sio.on('servoPanEvent')
 def message(sid, angle):
-        pwm.setPWM(o, 0, angleMap(int(angle)))
+        pwm.setPWM(0, 0, angleMap(int(angle)))
 	print('PAN: ', int(angle))
 
 @sio.on('servoTiltEvent')
@@ -115,7 +115,7 @@ def move(direction):
         if newAngle <= 180:
             pwm.setPWM(0, 0, angleMap(newAngle))
             servos[0]['angle'] = newAngle
-        
+
     elif direction == 'right':
         print("Right...")
         #Decrement Angle
@@ -124,7 +124,7 @@ def move(direction):
         if newAngle >= 0:
             pwm.setPWM(0, 0, angleMap(newAngle))
             servos[0]['angle'] = newAngle
-            
+
     elif direction == 'up':
         print("Up...")
         #Increment Angle
@@ -133,7 +133,7 @@ def move(direction):
         if newAngle <= 180:
             pwm.setPWM(1, 0, angleMap(newAngle))
             servos[1]['angle'] = newAngle
-        
+
     elif direction == 'down':
         print("Down...")
         #Decrement Angle
@@ -142,15 +142,15 @@ def move(direction):
         if newAngle >= 0:
             pwm.setPWM(1, 0, angleMap(newAngle))
             servos[1]['angle'] = newAngle
-        
-        
+
+
 if __name__ == "__main__":
 	#wrap Flask application with socketio's middleware
         app = socketio.Middleware(sio, app)
 
         #deploy as an eventlet WSGI server
         eventlet.wsgi.server(eventlet.listen(('', 8088)),app)
-    
+
 #window.bind("<a>", move(left))
 #window.bind("<d>", move(right))
 #window.mainloop()
