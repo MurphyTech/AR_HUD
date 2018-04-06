@@ -29,27 +29,28 @@ def index():
 
 @sio.on('connect')
 def connect(sid, environ):
-        print('connect', sid)
+    print('connect', sid)
+
+@sio.on('servoEvent')
+def message(sid, panAngle, tiltAngle):
+    pwm.setPWM(0, 0, angleMap(int(panAngle)))
+	print('PAN: ', int(panAngle))
+	pwm.setPWM(1, 0, angleMap(int(tiltAngle)))
+	print('TILT: ', int(tiltAngle))
 
 @sio.on('servoPanEvent')
-def message(sid, angle):
-        pwm.setPWM(0, 0, angleMap(int(angle)))
-	print('PAN: ', int(angle))
+def message(sid, panAngle):
+    pwm.setPWM(0, 0, angleMap(int(panAngle)))
+	print('PAN: ', int(panAngle))
 
 @sio.on('servoTiltEvent')
-def tlit(sid, angle):
-	pwm.setPWM(1, 0, angleMap(int(angle)))
-	print('TILT: ', int(angle))
+def message(sid, tiltAngle):
+	pwm.setPWM(1, 0, angleMap(int(tiltAngle)))
+	print('TILT: ', int(tiltAngle))
 
 @sio.on('disconnect')
 def disconnect(sid):
-        print('message', sid)
-
-
-
-#window = Tk()
-#window.geometry("600x480")
-#window.title("Servo")
+    print('disconnect', sid)
 
 # Initialise the PWM device using the default address
 pwm = PWM(0x40)
@@ -89,18 +90,6 @@ print('Moving servo on channel 0, press Ctrl-C to quit...')
 left = 122
 middle = 366
 right = 610
-##while True:
-####def move(direction):
-##    ##if direction == 'left'
-##    print("Left: ", left)
-##    pwm.setPWM(0, 0, left)
-##    time.sleep(1)
-##    print("Middle: ", middle)
-##    pwm.setPWM(0, 0, middle)
-##    time.sleep(1)
-##    print("Right: ", right)
-##    pwm.setPWM(0, 0, right)
-##    time.sleep(1)
 
 def angleMap(angle):
     return int((round((488.0/180.0),0)*angle) + 122)
@@ -150,16 +139,3 @@ if __name__ == "__main__":
 
         #deploy as an eventlet WSGI server
         eventlet.wsgi.server(eventlet.listen(('', 8088)),app)
-
-#window.bind("<a>", move(left))
-#window.bind("<d>", move(right))
-#window.mainloop()
-
-
-##servoCtrl = Servo_Ctrl()
-##window.bind("<w>", servoCtrl.up)
-##window.bind("<s>", servoCtrl.down)
-##window.bind("<a>", servoCtrl.left)
-##servoCurrentPan = window.bind("<d>", lambda event: servoCtrl.right(event, servoCurrentPan))
-##
-##window.mainloop()

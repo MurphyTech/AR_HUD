@@ -25,7 +25,7 @@ public class orientation extends AppCompatActivity implements SensorEventListene
     private Sensor sensorAccel;
     private Sensor sensorMagnetometer;
     private TextView rawData, Azimuth, Pitch, Roll, DataLength;
-    public static EditText mInputMessageView;
+
     //private double PI;
     private float averagePitch = 0;
     private float averageRoll = 0;
@@ -56,8 +56,7 @@ public class orientation extends AppCompatActivity implements SensorEventListene
         Pitch = findViewById(R.id.Pitch);
         Roll = findViewById(R.id.Roll);
 
-        mInputMessageView = (EditText) findViewById(R.id.message);
-        mInputMessageView.setOnEditorActionListener(new DoneOnEditorActionListener());
+
 
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         sensorData = new ArrayList();

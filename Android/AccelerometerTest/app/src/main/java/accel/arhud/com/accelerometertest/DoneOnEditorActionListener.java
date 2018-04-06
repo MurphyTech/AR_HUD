@@ -12,7 +12,7 @@ import io.socket.client.Socket;
  */
 
 public class DoneOnEditorActionListener implements TextView.OnEditorActionListener{
-    private Socket mSocket;
+    public Socket mSocket;
 
     @Override
     public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
@@ -30,19 +30,19 @@ public class DoneOnEditorActionListener implements TextView.OnEditorActionListen
             mSocket.connect();
 
             attemptSend();
-            orientation.mInputMessageView.setText("");
+            MainActivity.mInputMessageView.setText("");
             handled = true;
             Log.d("SOCKET", "Message Sent");
         }
         return handled;
     }
     protected void attemptSend() {
-        String message = orientation.mInputMessageView.getText().toString().trim();
+        String message = MainActivity.mInputMessageView.getText().toString().trim();
         if (TextUtils.isEmpty(message)) {
             return;
         }
 
-        mSocket.emit("servoEvent", message);
+        mSocket.emit("servoPanEvent", message);
     }
 
 
