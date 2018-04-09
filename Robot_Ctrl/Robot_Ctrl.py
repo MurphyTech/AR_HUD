@@ -22,26 +22,36 @@ atexit.register(turnOffMotors)
 leftMotor = mh.getMotor(1)
 rightMotor = mh.getMotor(2)
 
-while (True):
-    (x,y) = joy.leftStick()
-    # x = Left-Right
-    # y = Up-Down
-    magnitude = sqrt(x^2 + y^2)
-    theta = atan2(y, x)
-    mapRight = magnitude*cos(theta)
-    mapLeft = magnitude*sin(theta)
-    
-    if y <= 0:
-        print "Backward! "
-        leftMotor.run(Adafruit_MotorHAT.BACKWARD)
-        rightMotor.run(Adafruit_MotorHAT.BACKWARD)
+print "Xbox controller sample: Press Back button to exit"
+# Loop until back button is pressed
+while not joy.Back():
+    # Show connection status
+    if joy.connected():
+        print "Connected   "
     else:
-        print "Forward! "
-        leftMotor.run(Adafruit_MotorHAT.FORWARD)
-        rightMotor.run(Adafruit_MotorHAT.FORWARD)
+        print "Disconnected"
+        
+    while (True):
+        (x,y) = joy.leftStick()
+        # x = Left-Right
+        # y = Up-Down
+        magnitude = math.sqrt(x*x + y*y)
+        theta = math.atan2(y, x)
+        mapRight = 255*magnitude*math.cos(theta)
+        mapLeft = 255*magnitude*math.sin(theta)
+        
+        if y <= 0:
+            print 'Backward! Left:{left} Right:{right}'.format(left=int(mapLeft), right=int(mapRight))
+            leftMotor.run(Adafruit_MotorHAT.BACKWARD)
+            rightMotor.run(Adafruit_MotorHAT.BACKWARD)
+        else:
+            print 'Forward! Left:{left} Right:{right}'.format(left=int(mapLeft), right=int(mapRight))
+            leftMotor.run(Adafruit_MotorHAT.FORWARD)
+            rightMotor.run(Adafruit_MotorHAT.FORWARD)
 
-    leftMotor.setSpeed(mapLeft)
-    rightMotor.setSpeed(mapRight)
-    time.sleep(0.01)
+        leftMotor.setSpeed(abs(int(mapLeft)))
+        rightMotor.setSpeed(abs(int(mapRight)))
+        time.sleep(0.01)
 
+# Close out when done
 joy.close()
