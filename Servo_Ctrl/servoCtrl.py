@@ -1,3 +1,4 @@
+
 #!/usr/bin/python
 #from Tkinter import *
 from Adafruit_PWM_Servo_Driver import PWM
@@ -34,19 +35,19 @@ def connect(sid, environ):
 @sio.on('servoEvent')
 def message(sid, panAngle, tiltAngle):
     pwm.setPWM(0, 0, angleMap(int(panAngle)))
-	print('PAN: ', int(panAngle))
-	pwm.setPWM(1, 0, angleMap(int(tiltAngle)))
-	print('TILT: ', int(tiltAngle))
+    print('PAN: ', int(panAngle))
+    pwm.setPWM(1, 0, angleMap(int(tiltAngle)))
+    print('TILT: ', int(tiltAngle))
 
 @sio.on('servoPanEvent')
 def message(sid, panAngle):
     pwm.setPWM(0, 0, angleMap(int(panAngle)))
-	print('PAN: ', int(panAngle))
+    print('PAN: ', int(panAngle))
 
 @sio.on('servoTiltEvent')
 def message(sid, tiltAngle):
-	pwm.setPWM(1, 0, angleMap(int(tiltAngle)))
-	print('TILT: ', int(tiltAngle))
+    pwm.setPWM(1, 0, angleMap(int(tiltAngle)))
+    print('TILT: ', int(tiltAngle))
 
 @sio.on('disconnect')
 def disconnect(sid):
