@@ -13,7 +13,7 @@ public class socket {
     private Socket mSocket;
     {
         try{
-            mSocket = IO.socket("http://192.168.0.31:8088");
+            mSocket = IO.socket("http://192.168.1.151:8088");
         } catch (URISyntaxException e) {}
     }
 

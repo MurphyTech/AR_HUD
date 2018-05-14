@@ -14,6 +14,8 @@ import android.widget.Toast;
 
 import io.socket.client.Socket;
 
+import static java.lang.Math.abs;
+
 
 public class MainActivity extends AppCompatActivity implements tiltPanSensor.TiltListener{
 
@@ -26,7 +28,9 @@ public class MainActivity extends AppCompatActivity implements tiltPanSensor.Til
 
     public static EditText mInputMessageView;
     private Socket mSocket;
-    private SeekBar panSeekBar, tiltSeekBar;
+
+    public long lastUpdate = 0;
+    //private SeekBar panSeekBar, tiltSeekBar;
 
     protected tiltPanSensor sensor;
 
@@ -52,12 +56,6 @@ public class MainActivity extends AppCompatActivity implements tiltPanSensor.Til
         mInputMessageView = (EditText) findViewById(R.id.message);
         mInputMessageView.setOnEditorActionListener(new DoneOnEditorActionListener());
 
-        //SeekBar panSeekBar=(SeekBar) findViewById(R.id.PanSeekBar); // initiate the Seekbar
-        //panSeekBar.setMax(150); // 150 maximum value for the Seek bar
-
-        //SeekBar tiltSeekBar=(SeekBar) findViewById(R.id.TiltSeekBar); // initiate the Seekbar
-        //tiltSeekBar.setMax(150); // 150 maximum value for the Seek bar
-
         SeekBar panSeekBar=(SeekBar) findViewById(R.id.PanSeekBar);
         SeekBar tiltSeekBar=(SeekBar) findViewById(R.id.TiltSeekBar);
 
@@ -67,6 +65,7 @@ public class MainActivity extends AppCompatActivity implements tiltPanSensor.Til
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 progressChangedValue = progress;
                 mSocket.emit("servoPanEvent", progress);
+                Log.d("PanSensor", "Porgress: " + progress);
             }
 
             @Override
@@ -86,6 +85,7 @@ public class MainActivity extends AppCompatActivity implements tiltPanSensor.Til
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 progressChangedValue = progress;
                 mSocket.emit("servoTiltEvent", progress);
+                Log.d("TiltSensor", "Porgress: " + progress);
             }
 
             @Override
@@ -110,8 +110,13 @@ public class MainActivity extends AppCompatActivity implements tiltPanSensor.Til
     public void onTiltUpdate(float yaw, float pitch, float roll) {
         this.latestPitch = pitch;
         this.latestRoll = roll;
-        mSocket.emit("servoEvent", pitch, roll);
-        Log.d("Tiltupdate", "Pitch: " + pitch + "\tRoll: " + roll);
+        long currentTime = System.currentTimeMillis();
+
+        if ((currentTime-lastUpdate)>=100) {
+            lastUpdate = currentTime;
+            mSocket.emit("servoEvent", abs(yaw), abs(pitch));
+            Log.d("Tiltupdate", "Pan: " + abs(yaw) + "\tTilt: " + abs(pitch));
+        }
     }
 
     private void initSensor() {
