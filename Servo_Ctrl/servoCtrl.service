@@ -1,0 +1,15 @@
+[Unit]
+Description=Service to control Camera movement
+After=network.target
+
+[Service]
+ExecStart=/usr/bin/python -u servoCtrl.py
+WorkingDirectory=/home/pi/sftp
+StandardOutput=inherit
+StandardError=inherit
+Restart=always
+User=pi
+KillSignal=SIGINT
+
+[Install]
+WantedBy=multi-user.target
